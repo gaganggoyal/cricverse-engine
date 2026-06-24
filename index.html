@@ -183,25 +183,30 @@
             const bowlBtn = document.getElementById('bowlBtn');
             const commentaryDisplay = document.getElementById('commentaryDisplay');
 
-            commentaryDisplay.innerText = "Resetting match...";
+            commentaryDisplay.innerText = "Resetting match on the server...";
 
             try {
-                // Call your brand new Python POST route to wipe memory
-                await fetch(`${BASE_URL}/api/reset`, { method: 'POST' });
+                // 1. Tell Python to wipe the memory
+                const response = await fetch(`${BASE_URL}/api/reset`, { method: 'POST' });
 
-                // Reset the screen back to zero
+                // 2. NEW LOGIC: Did Python actually say YES?
+                if (!response.ok) {
+                    throw new Error("Server refused to reset. Is Render updated?");
+                }
+
+                // 3. Only wipe the screen IF Python successfully wiped its memory
                 document.getElementById('scoreDisplay').innerText = "0/0";
                 document.getElementById('oversDisplay').innerText = "0.0";
                 document.getElementById('matchupDisplay').innerText = "Ready to play.";
                 commentaryDisplay.innerText = "Memory wiped. New match started! Bowl the first ball.";
                 
-                // Turn the button back on (in case they were in 'Innings Over' state)
                 bowlBtn.disabled = false;
                 bowlBtn.innerText = "Bowl Next Ball 🏏";
 
             } catch (error) {
                 console.error("Error resetting game:", error);
-                commentaryDisplay.innerText = "Error: Could not reset the game. Check Render logs.";
+                // If it fails, tell the user! Don't fake the 0/0 score.
+                commentaryDisplay.innerText = "Error: Could not reset the server. Please wait a minute and try again.";
             }
         }
     </script>
