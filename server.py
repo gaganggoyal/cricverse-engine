@@ -5,6 +5,12 @@ import json
 import os
 
 app = FastAPI()
+# --- THE GAME MEMORY ---
+match_state = {
+    "runs": 0,
+    "wickets": 0,
+    "balls": 0
+}
 
 # Allow your Netlify website to talk to your Render backend safely
 app.add_middleware(
@@ -47,15 +53,36 @@ def calculate_realistic_outcome(batter_name, bowler_name):
 
 @app.get("/api/bowl")
 async def bowl_delivery():
-    # Choose who is playing this ball (You can change these names to test!)
+    # 1. Stop the game if 10 wickets fall (Your exact code!)
+    if match_state["wickets"] >= 10:
+        return {
+            "game_over": True,
+            "message": f"Innings Over! Final Score: {match_state['runs']}/{match_state['wickets']}"
+        }
+
+    # 2. Choose who is playing this ball
     current_batter = "S Tendulkar"
     current_bowler = "Part-Timer"
     
-    # Calculate outcome using our smart engine
+    # 3. Calculate outcome using our smart engine
     math_outcome = calculate_realistic_outcome(current_batter, current_bowler)
     
-    # placeholder AI commentary until you plug your Gemini code back here
-    mock_commentary = f"{current_bowler} bowls to {current_batter}, and the result is a {math_outcome}!"
+    # 4. UPDATE THE SCOREBOARD
+    match_state["balls"] += 1
+    if math_outcome == "Wicket":
+        match_state["wickets"] += 1
+    elif math_outcome != "Dot":
+        # If it's a number (1, 2, 3, 4, 6), add it to runs
+        match_state["runs"] += int(math_outcome)
+        
+    # Calculate Overs (e.g., 14 balls = 2.2 overs)
+    overs_completed = match_state["balls"] // 6
+    balls_in_current_over = match_state["balls"] % 6
+    formatted_overs = f"{overs_completed}.{balls_in_current_over}"
+    formatted_score = f"{match_state['runs']}/{match_state['wickets']}"
+
+    # 5. Placeholder Commentary
+    mock_commentary = f"{current_bowler} bowls to {current_batter}, and it's a {math_outcome}!"
     
     return {
         "game_over": False,
@@ -64,6 +91,6 @@ async def bowl_delivery():
         "pitch": "Standard",
         "math_outcome": math_outcome,
         "ai_commentary": mock_commentary,
-        "current_score": "12/0",
-        "current_over": "1.4"
+        "current_score": formatted_score,
+        "current_over": formatted_overs
     }
