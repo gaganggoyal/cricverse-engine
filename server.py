@@ -94,3 +94,12 @@ async def bowl_delivery():
         "current_score": formatted_score,
         "current_over": formatted_overs
     }
+
+@app.post("/api/reset")
+async def reset_match():
+    # Reset our global memory bank back to zero
+    match_state["runs"] = 0
+    match_state["wickets"] = 0
+    match_state["balls"] = 0
+    
+    return {"message": "Memory wiped. New match started!"}

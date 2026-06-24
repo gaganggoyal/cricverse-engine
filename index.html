@@ -3,260 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cricverse Premium Broadcast</title>
+    <title>Cricverse Engine</title>
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #0c0f12; 
-            color: #ffffff; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        .broadcast-container { 
-            background: linear-gradient(145deg, #13171c, #1e242b);
-            border: 1px solid #2c3540;
-            border-radius: 16px; 
-            padding: 35px; 
-            width: 480px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
-            text-align: center; 
-        }
-        .live-badge {
-            background-color: #ff3333;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-block;
-            margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(255, 51, 51, 0.4);
-        }
-        .title { color: #6c7a89; font-size: 13px; text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 8px; }
-        .matchup { font-size: 24px; font-weight: 700; color: #e2e8f0; margin-bottom: 25px; letter-spacing: -0.5px; }
-        .score-display {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid #232a34;
-        }
-        .score { font-size: 64px; font-weight: 900; color: #00e676; margin: 0; line-height: 1; letter-spacing: -1px; }
-        .over-info { font-size: 14px; color: #94a3b8; margin-top: 10px; font-weight: 500; }
-        
-        /* Over Tracker Styles */
-        .over-tracker {
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px 0;
-        }
-        .ball-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px dashed #475569;
-            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #00ffcc;
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+        }
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .score-box h2 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: #ffffff;
+        }
+        .score-box p {
+            margin: 0;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        .matchup {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
             font-weight: bold;
-            color: #64748b;
-            transition: all 0.3s ease;
-            background-color: rgba(0,0,0,0.2);
+            color: #ffcc00;
         }
-        .ball-circle.active {
-            border-color: #2979ff;
-            color: #2979ff;
-            box-shadow: 0 0 8px rgba(41, 121, 255, 0.3);
+        .commentary-box {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            min-height: 80px;
+            margin-bottom: 25px;
+            font-style: italic;
+            line-height: 1.5;
+            font-size: 1.1rem;
         }
-        .ball-circle.filled { border-style: solid; color: white; }
-        .ball-circle.dot { border-color: #64748b; background-color: #334155; color: #cbd5e1; }
-        .ball-circle.runs { border-color: #00e676; background-color: #004d26; color: #00e676; }
-        .ball-circle.boundary { border-color: #ffd600; background-color: #ffd600; color: #000000; scale: 1.05; box-shadow: 0 0 10px rgba(255, 214, 0, 0.4); }
-        .ball-circle.wicket { border-color: #ff1744; background-color: #ff1744; color: #ffffff; scale: 1.05; box-shadow: 0 0 10px rgba(255, 23, 68, 0.4); }
-
-        .commentary-box { 
-            background-color: #182026; 
-            border-left: 4px solid #2979ff;
-            padding: 22px; 
-            border-radius: 0 8px 8px 0; 
-            margin: 25px 0; 
-            font-size: 16px; 
-            font-style: italic; 
-            line-height: 1.6;
-            color: #cbd5e1;
-            min-height: 68px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            text-align: left;
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
         }
-        .btn { 
-            background: linear-gradient(135deg, #2979ff, #1565c0);
-            color: white; 
-            border: none; 
-            padding: 16px 24px; 
-            font-size: 18px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            width: 100%; 
-            font-weight: 700; 
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(41, 121, 255, 0.3);
+        button {
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(41, 121, 255, 0.4); }
-        .btn:active { transform: translateY(0); }
-        .btn:disabled { background: #2e3844; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
-        .status { font-size: 13px; color: #94a3b8; margin-top: 15px; border-top: 1px solid #232a34; padding-top: 12px; }
+        .bowl-btn {
+            background-color: #00ffcc;
+            color: #121212;
+            flex: 2;
+        }
+        .bowl-btn:hover:not(:disabled) {
+            background-color: #00e6b8;
+            transform: translateY(-2px);
+        }
+        .bowl-btn:disabled {
+            background-color: #555555;
+            color: #aaaaaa;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .reset-btn {
+            background-color: #ff4d4d;
+            color: white;
+            flex: 1;
+        }
+        .reset-btn:hover {
+            background-color: #e60000;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
 
-    <div class="broadcast-container">
-        <div class="live-badge">🔴 Live Broadcast</div>
-        <div class="title">Cricverse Engine</div>
-        <div class="matchup" id="matchup">Waiting for Match Setup...</div>
+    <div class="dashboard">
+        <h1>Gagan's Live Cricverse</h1>
         
-        <div class="score-display">
-            <div class="score" id="outcome">-</div>
-            <div class="over-info" id="overInfo">Overs: 0.0</div>
+        <div class="scoreboard">
+            <div class="score-box">
+                <h2 id="scoreDisplay">0/0</h2>
+                <p>SCORE</p>
+            </div>
+            <div class="score-box">
+                <h2 id="oversDisplay">0.0</h2>
+                <p>OVERS</p>
+            </div>
         </div>
-        
-        <div class="over-tracker">
-            <div class="ball-circle" id="ball-1">1</div>
-            <div class="ball-circle" id="ball-2">2</div>
-            <div class="ball-circle" id="ball-3">3</div>
-            <div class="ball-circle" id="ball-4">4</div>
-            <div class="ball-circle" id="ball-5">5</div>
-            <div class="ball-circle" id="ball-6">6</div>
+
+        <div class="matchup" id="matchupDisplay">
+            Waiting for first ball...
         </div>
-        
-        <div class="commentary-box" id="commentary">
-            The umpires are walking out to the middle. Press below to begin the transmission.
+
+        <div class="commentary-box" id="commentaryDisplay">
+            Welcome to the Cricverse Engine! Press 'Bowl Next Ball' to begin the match.
         </div>
-        
-        <button class="btn" id="bowlBtn" onclick="bowlBall()">Bowl Next Ball</button>
-        <div class="status" id="statusMsg">Pitch Condition: Standard</div>
+
+        <div class="controls">
+            <button id="bowlBtn" class="bowl-btn" onclick="bowlDelivery()">Bowl Next Ball 🏏</button>
+            <button class="reset-btn" onclick="resetGame()">New Match 🔄</button>
+        </div>
     </div>
 
     <script>
-        // Track the current delivery index within the current over (0 to 5)
-        let currentBallIndex = 0;
+        // *** CRITICAL: Ensure this matches your actual Render URL ***
+        const BASE_URL = 'https://cricverse-engine.onrender.com';
 
-        async function bowlBall() {
-            const btn = document.getElementById('bowlBtn');
-            const outcomeEl = document.getElementById('outcome');
-            const commentaryEl = document.getElementById('commentary');
-            const matchupEl = document.getElementById('matchup');
-            const overInfoEl = document.getElementById('overInfo');
-            const statusEl = document.getElementById('statusMsg');
-
-            // 1. Enter Loading State
-            btn.disabled = true;
-            btn.innerText = "Bowler running in...";
-            outcomeEl.innerText = "...";
-            commentaryEl.innerText = "🎙️ Listening to the commentary box...";
-
-            // Highlight the current active ball indicator circle
-            updateActiveCircle(currentBallIndex);
+        async function bowlDelivery() {
+            const bowlBtn = document.getElementById('bowlBtn');
+            const commentaryDisplay = document.getElementById('commentaryDisplay');
+            
+            // 1. Loading State (Disables the button so you can't double-click)
+            bowlBtn.disabled = true;
+            bowlBtn.innerText = "Bowling...";
+            commentaryDisplay.innerText = "The bowler is running in...";
 
             try {
-                // 2. Fetch data payload from the local FastAPI endpoint
-                const response = await fetch('https://cricverse-engine.onrender.com/api/bowl');
+                // 2. Call the Python Engine
+                const response = await fetch(`${BASE_URL}/api/bowl`);
                 const data = await response.json();
 
-                // Intercept data if the innings is complete
+                // 3. Check for Game Over (10 wickets)
                 if (data.game_over) {
-                    matchupEl.innerText = "INNINGS COMPLETE";
-                    outcomeEl.innerText = "ALL OUT";
-                    outcomeEl.style.color = '#ff1744';
-                    commentaryEl.innerText = `🏏 ${data.message}`;
-                    statusEl.innerText = "Restart backend server to initiate a new simulation sequence.";
-                    btn.innerText = "Transmission Ended";
-                    return; 
+                    commentaryDisplay.innerText = data.message;
+                    bowlBtn.innerText = "Innings Over";
+                    return; // Stops here, leaving the button disabled!
                 }
 
-                // 3. Render Match Meta Data
-                matchupEl.innerText = `${data.bowler} to ${data.batter}`;
-                outcomeEl.innerText = data.current_score; 
-                overInfoEl.innerText = `Overs: ${data.current_over}`;
-                commentaryEl.innerText = `"${data.ai_commentary}"`;
-                statusEl.innerText = `Last Event: ${data.math_outcome} | Pitch: ${data.pitch}`;
+                // 4. Update the UI with fresh math
+                document.getElementById('scoreDisplay').innerText = data.current_score;
+                document.getElementById('oversDisplay').innerText = data.current_over;
+                document.getElementById('matchupDisplay').innerText = `${data.bowler} vs ${data.batter}`;
+                commentaryDisplay.innerText = data.ai_commentary;
 
-                // 4. Update the Visual Over Tracker Widget
-                renderBallResult(currentBallIndex, data.math_outcome);
+                // 5. Turn the button back on
+                bowlBtn.disabled = false;
+                bowlBtn.innerText = "Bowl Next Ball 🏏";
 
-                // Increment index or handle over boundary resetting sequence
-                const legalBalls = parseInt(data.current_over.split('.')[1]);
-                if (legalBalls === 0 && data.current_over !== "0.0") {
-                    // An over just finished, reset circles on the next delivery request
-                    currentBallIndex = 0;
-                } else {
-                    currentBallIndex = legalBalls;
-                }
-                
             } catch (error) {
-                commentaryEl.innerText = "❌ Network connection dropped.";
-                statusEl.innerText = "Verify that the Uvicorn local server framework is active.";
-                outcomeEl.innerText = "OFFLINE";
-                outcomeEl.style.color = "#ff1744";
-            }
-
-            if (btn.innerText !== "Transmission Ended") {
-                btn.disabled = false;
-                btn.innerText = "Bowl Next Ball";
+                console.error("Error connecting to server:", error);
+                commentaryDisplay.innerText = "Error: Could not connect to the engine. Is Render awake?";
+                bowlBtn.disabled = false;
+                bowlBtn.innerText = "Try Again 🏏";
             }
         }
 
-        function updateActiveCircle(index) {
-            // If it's a fresh over, strip classes from all indicator spheres
-            if (index === 0) {
-                for (let i = 1; i <= 6; i++) {
-                    const circle = document.getElementById(`ball-${i}`);
-                    circle.className = "ball-circle";
-                    circle.innerText = i;
-                }
-            }
-            
-            const activeCircle = document.getElementById(`ball-${index + 1}`);
-            if (activeCircle) {
-                activeCircle.classList.add('active');
-            }
-        }
+        async function resetGame() {
+            const bowlBtn = document.getElementById('bowlBtn');
+            const commentaryDisplay = document.getElementById('commentaryDisplay');
 
-        function renderBallResult(index, outcome) {
-            const circle = document.getElementById(`ball-${index + 1}`);
-            if (!circle) return;
+            commentaryDisplay.innerText = "Resetting match...";
 
-            circle.classList.remove('active');
-            circle.classList.add('filled');
+            try {
+                // Call your brand new Python POST route to wipe memory
+                await fetch(`${BASE_URL}/api/reset`, { method: 'POST' });
 
-            // Apply granular broadcast styling metadata rules based on calculation outputs
-            if (outcome === 'Wicket') {
-                circle.classList.add('wicket');
-                circle.innerText = 'W';
-            } else if (outcome === 'Dot') {
-                circle.classList.add('dot');
-                circle.innerText = '•';
-            } else if (outcome === '4 Runs') {
-                circle.classList.add('boundary');
-                circle.innerText = '4';
-            } else if (outcome === '6 Runs') {
-                circle.classList.add('boundary');
-                circle.innerText = '6';
-            } else {
-                circle.classList.add('runs');
-                // Extract single digit string value from 'X Run(s)' pattern
-                circle.innerText = outcome.split(' ')[0];
+                // Reset the screen back to zero
+                document.getElementById('scoreDisplay').innerText = "0/0";
+                document.getElementById('oversDisplay').innerText = "0.0";
+                document.getElementById('matchupDisplay').innerText = "Ready to play.";
+                commentaryDisplay.innerText = "Memory wiped. New match started! Bowl the first ball.";
+                
+                // Turn the button back on (in case they were in 'Innings Over' state)
+                bowlBtn.disabled = false;
+                bowlBtn.innerText = "Bowl Next Ball 🏏";
+
+            } catch (error) {
+                console.error("Error resetting game:", error);
+                commentaryDisplay.innerText = "Error: Could not reset the game. Check Render logs.";
             }
         }
     </script>
+
 </body>
 </html>
