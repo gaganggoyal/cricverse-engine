@@ -1,0 +1,15 @@
+{
+  "batters": {
+    "V Kohli": {"rating": 95, "style": "Aggressive"},
+    "R Sharma": {"rating": 93, "style": "Aggressive"},
+    "MS Dhoni": {"rating": 88, "style": "Finisher"},
+    "S Tendulkar": {"rating": 99, "style": "Legend"},
+    "Tailender": {"rating": 25, "style": "Defensive"}
+  },
+  "bowlers": {
+    "JJ Bumrah": {"rating": 96, "type": "Pacer"},
+    "Rashid Khan": {"rating": 92, "type": "Spinner"},
+    "S Afridi": {"rating": 90, "type": "Pacer"},
+    "Part-Timer": {"rating": 50, "type": "Medium Pace"}
+  }
+}
