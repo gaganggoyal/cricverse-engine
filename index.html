@@ -144,7 +144,7 @@
             const bowlBtn = document.getElementById('bowlBtn');
             const commentaryDisplay = document.getElementById('commentaryDisplay');
             
-            // 1. Loading State (Disables the button so you can't double-click)
+            // 1. Loading State
             bowlBtn.disabled = true;
             bowlBtn.innerText = "Bowling...";
             commentaryDisplay.innerText = "The bowler is running in...";
@@ -158,14 +158,30 @@
                 if (data.game_over) {
                     commentaryDisplay.innerText = data.message;
                     bowlBtn.innerText = "Innings Over";
-                    return; // Stops here, leaving the button disabled!
+                    
+                    // Have the announcer say it's over!
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance(data.message));
+                    
+                    return; // Stops here!
                 }
 
-                // 4. Update the UI with fresh math
+                // 4. Update the UI with fresh math and text
                 document.getElementById('scoreDisplay').innerText = data.current_score;
                 document.getElementById('oversDisplay').innerText = data.current_over;
                 document.getElementById('matchupDisplay').innerText = `${data.bowler} vs ${data.batter}`;
                 commentaryDisplay.innerText = data.ai_commentary;
+
+                // 4.5 The Live Voice Commentator
+                // Cancel any currently playing speech so voices don't overlap
+                window.speechSynthesis.cancel(); 
+                
+                const utterance = new SpeechSynthesisUtterance(data.ai_commentary);
+                // Make the voice sound energetic and fast like a sports announcer
+                utterance.rate = 1.15; 
+                utterance.pitch = 1.1;
+                
+                window.speechSynthesis.speak(utterance);
 
                 // 5. Turn the button back on
                 bowlBtn.disabled = false;
@@ -184,12 +200,15 @@
             const commentaryDisplay = document.getElementById('commentaryDisplay');
 
             commentaryDisplay.innerText = "Resetting match on the server...";
+            
+            // Stop the announcer if they are currently speaking
+            window.speechSynthesis.cancel(); 
 
             try {
                 // 1. Tell Python to wipe the memory
                 const response = await fetch(`${BASE_URL}/api/reset`, { method: 'POST' });
 
-                // 2. NEW LOGIC: Did Python actually say YES?
+                // 2. Did Python actually say YES?
                 if (!response.ok) {
                     throw new Error("Server refused to reset. Is Render updated?");
                 }
