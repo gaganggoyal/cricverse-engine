@@ -3,6 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 import random
 import json
 import os
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+# Load local environment variables (safe for GitHub)
+load_dotenv()
+
+# Configure the AI Brain
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 app = FastAPI()
 # --- THE GAME MEMORY ---
