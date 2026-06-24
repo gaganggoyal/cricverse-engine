@@ -1,0 +1,15 @@
+venv/
+# Secrets and Credentials
+.env
+
+# Virtual Environments
+venv/
+env/
+
+# Python Cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Mac OS System files
+.DS_Store
